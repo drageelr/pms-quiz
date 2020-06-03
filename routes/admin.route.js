@@ -1,6 +1,7 @@
 'use strict'
 
 var router = require('express').Router();
+var { validate } = require('express-validation');
 var jwt = require('../services/jwt');
 var adminValidation = require('../validations/admin.validation');
 var adminController = require('../controllers/admin.controller');

@@ -19,7 +19,15 @@ function validateElements(elements) {
 
 function validateQuesitons(questions, elementIds) {
     for (let q = 0; q < questions.length; q++) {
-        if (!(questions[q].elementId in elementIds)) {
+        let e = 0;
+        for ( ; e < elementIds.length; e++) {
+            if (elementIds[e].Id == questions[q].elementId) {
+                questions[q].elementId = elementIds[e]._id;
+                break;
+            }
+        }
+
+        if (e == elementIds.length) {
             return '"elementId" of question at position "' + (q + 1) + '" is invalid';
         }
 
@@ -155,13 +163,13 @@ exports.addQuestions = async (req, res, next) => {
     try {
         let params = req.body;
 
-        let reqElements = await Element.find({}, 'elementId');
+        let reqElements = await Element.find({}, 'elementId _id');
 
         if (reqElements.length == 0) {
             // throw bad request error
         }
 
-        let validationError = validateQuesitons(params.questions, reqElements.map(e => e.elementId));
+        let validationError = validateQuesitons(params.questions, reqElements.map(e => ({Id: e.elementId, _id: e._id})));
 
         if (validationError) {
             // throw bad request error
