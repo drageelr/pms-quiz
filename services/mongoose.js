@@ -28,7 +28,7 @@ mongoose.connection.on('error', (err) => {
 */
 exports.connect = () => {
 // Variables:
-var mongoURI = config.mongoURI + config.db;
+var mongoURI = "mongodb+srv://admin:Iamnasir12345@pms-quiz-dfvd6.mongodb.net/mainDB?retryWrites=true&w=majority";
   
 // Connect With Mongoose:
 mongoose.connect(mongoURI, {
