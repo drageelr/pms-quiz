@@ -26,17 +26,17 @@ function decodeToken(token) {
 
 exports.verifyAdmin = async (req, res, next) => {
     try {
-        let token = req.get("Authorization");
-        if (token) {
-            token = token.substring(7);
-        } else {
+        let token = req.query.token;
+        if (!token) {
             // throw no token error
+            throw new customError.TokenError("no token");
         }
 
         let decodedObj = decodeToken(token);
 
         if (decodedObj.err) {
             // throw invalid or expired token error
+            throw new customError.TokenError("invlaid or expired token");
         }
 
         let admin = await Admin.findById(decodedObj._id);
@@ -46,6 +46,7 @@ exports.verifyAdmin = async (req, res, next) => {
             next();
         } else {
             // throw invalid or expired token error
+            throw new customError.TokenError("invalid or expired token");
         }
     } catch (err) {
         next(err);
@@ -57,12 +58,14 @@ exports.verifySubmission = async (req, res, next) => {
         let token = req.query.token;
         if (!token) {
             // throw no token error
+            throw new customError.TokenError("no token");
         }
 
         let decodedObj = decodeToken(token);
 
         if (decodedObj.err) {
             // throw invalid or expired token error
+            throw new customError.TokenError("invalid or expired token");
         }
 
         let submission = await Submission.findById(decodedObj._id);
@@ -72,6 +75,7 @@ exports.verifySubmission = async (req, res, next) => {
             next()
         } else {
             // throw invalid or expired token error
+            throw new customError.TokenError("invalid or expired token");
         }
     } catch(err) {
         next(err);

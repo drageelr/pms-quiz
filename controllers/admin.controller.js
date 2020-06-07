@@ -3,6 +3,7 @@
 var Admin = require('../models/admin.model');
 var Element = require('../models/element.model');
 var Question = require('../models/question.model');
+var Submission = require('../models/submission.model');
 var jwt = require('../services/jwt');
 var customError = require('../errors/errors');
 
@@ -48,6 +49,7 @@ exports.login = async (req, res, next) => {
 
         if (!reqAdmin) {
             // throw invalid credentials error
+            throw new customError.InvalidCredentialsError("invalid email or password");
         }
 
         res.json({
@@ -85,6 +87,7 @@ exports.forgotPassword = async (req, res, next) => {
 
         if (!reqAdmin) {
             // throw admin not found error
+            throw new customError.NotFoundError("admin user not found");
         }
 
         let token = jwt.signAdmin(reqAdmin_id, "1h");
@@ -109,6 +112,7 @@ exports.addElements = async (req, res, next) => {
 
         if (validationError) {
             // throw bad request error
+            throw new customError.ValidationError(validationError);
         }
 
         await Element.create(params.elements, 'elementId');
@@ -128,6 +132,7 @@ exports.wipeElements = async (req, res, next) => {
 
         await Element.deleteMany({});
         await Question.deleteMany({});
+        await Submission.deleteMany({});
 
         res.json({
             statusCode: 200,
@@ -167,12 +172,14 @@ exports.addQuestions = async (req, res, next) => {
 
         if (reqElements.length == 0) {
             // throw bad request error
+            throw new customError.ValidationError("invalid element(s)");
         }
 
         let validationError = validateQuesitons(params.questions, reqElements.map(e => ({Id: e.elementId, _id: e._id})));
 
         if (validationError) {
             // throw bad request error
+            throw new customError.ValidationError(validationError);
         }
 
         await Question.create(params.questions);
@@ -191,6 +198,7 @@ exports.wipeQuestions = async (req, res, next) => {
     try {
 
         await Question.deleteMany({});
+        await Submission.deleteMany({});
 
         res.json({
             statusCode: 200,
@@ -231,5 +239,18 @@ exports.fetchQuestions = async (req, res, next) => {
         })
     } catch(err) {
         next(err);
+    }
+}
+
+exports.defaultAccount = async () => {
+    let admin = await Admin.find({});
+    if (admin.length == 0) {
+        let newAdmin = new Admin({
+            email: "nasiramzan@gmail.com",
+            password: "Test12345",
+            name: "Nasir Ramzan"
+        })
+
+        await newAdmin.save();
     }
 }
