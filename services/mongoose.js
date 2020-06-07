@@ -27,20 +27,20 @@ mongoose.connection.on('error', (err) => {
 * Connects with mongodb and returns connection object.
 */
 exports.connect = () => {
-// Variables:
-var mongoURI = "mongodb+srv://admin:Iamnasir12345@pms-quiz-dfvd6.mongodb.net/mainDB?retryWrites=true&w=majority";
+    // Variables:
+    var mongoURI = "mongodb+srv://admin:Iamnasir12345@pms-quiz-dfvd6.mongodb.net/mainDB?retryWrites=true&w=majority";
   
-// Connect With Mongoose:
-mongoose.connect(mongoURI, {
-    keepAlive: 1,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+    // Connect With Mongoose:
+    mongoose.connect(mongoURI, {
+        keepAlive: 1,
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
   
-// Set Mongoose Options:
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true)
+    // Set Mongoose Options:
+    mongoose.set('useFindAndModify', false);
+    mongoose.set('useCreateIndex', true)
   
-// Return Mongoose Connection Object
-return mongoose.connection
+    // Return Mongoose Connection Object
+    return mongoose.connection
 }
