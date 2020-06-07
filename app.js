@@ -4,6 +4,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('./services/mongoose');
 var adminController = require('./controllers/admin.controller');
+var adminRouter = require('./routes/admin.route');
+var quizRouter = require('./routes/quiz.route');
 
 
 var app = express();
@@ -12,6 +14,10 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static('public'))
+
+app.use('/api/admin', adminRouter);
+app.use('/api/quiz', quizRouter);
 
 mongoose.connect();
 

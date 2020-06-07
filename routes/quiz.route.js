@@ -24,4 +24,11 @@ router.post(
     quizController.result
 )
 
+router.get(
+    '/test',
+    (req, res, next) => {
+        res.json("TEST!");
+    }
+);
+
 module.exports = router;

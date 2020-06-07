@@ -28,7 +28,7 @@ mongoose.connection.on('error', (err) => {
 */
 exports.connect = () => {
     // Variables:
-    var mongoURI = process.env.MONGOURI || "mongodb://localhost:27017/";
+    var mongoURI = process.env.MONGOURI || "mongodb://localhost:27017/pms-quiz";
   
     // Connect With Mongoose:
     mongoose.connect(mongoURI, {

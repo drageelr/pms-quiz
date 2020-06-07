@@ -29,5 +29,11 @@ exports.errorHandler = (err, req, res, next) => {
                 details: err.details
             }
         });
+    } else {
+        res.json({
+            statusCode: 500,
+            statusName: "INTERNAL SERVER ERROR",
+            message: "Internal Server Error!"
+        })
     }
 }
