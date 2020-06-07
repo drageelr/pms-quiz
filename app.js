@@ -15,6 +15,6 @@ app.use(cookieParser());
 
 mongoose.connect();
 
-await adminController.defaultAccount();
+adminController.defaultAccount();
 
 module.exports = app;
