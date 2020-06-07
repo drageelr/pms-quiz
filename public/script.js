@@ -7,10 +7,8 @@ function test() {
 async function login() {
     try {
         payload = {
-            body: {
-                email: document.getElementById("email").value,
-                password: document.getElementById("password").value
-            }
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
         };
 
         console.log(payload);
@@ -24,7 +22,9 @@ async function login() {
             })
         })
 
-        console.log(response);
+        let data = await response.json();
+
+        console.log(data);
     } catch(err) {
         console.log(err);
     }
