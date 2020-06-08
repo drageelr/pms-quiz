@@ -31,7 +31,6 @@ h2 {
 
 
 /* STRUCTURE */
-
 .wrapper {
     display: flex;
     align-items: center;
@@ -77,6 +76,20 @@ h2.active {
     color: #0d0d0d;
     border-bottom: 2px solid #5fbae9;
 }
+
+.column {
+    float: left;
+    width: 50%;
+    padding: 10px;
+    height: 300px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 
 /* TABLES */
 #view {

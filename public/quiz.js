@@ -7,43 +7,29 @@ function Question() {
         'div',
         null,
         React.createElement(
+            'h3',
+            null,
+            'What fraction of a day is 6 hours?'
+        ),
+        React.createElement(
             'div',
             null,
             React.createElement(
-                'h3',
+                'label',
                 null,
-                'What fraction of a day is 6 hours?'
-            ),
+                React.createElement('input', { type: 'radio', name: 'option', value: '6/24', id: 'option-1' }),
+                '6/24'
+            )
+        ),
+        React.createElement(
+            'div',
+            null,
             React.createElement(
-                'p',
+                'label',
                 null,
-                'Choose 1 answer'
-            ),
-            React.createElement('hr', null),
-            React.createElement(
-                'div',
-                { id: 'block-11' },
-                React.createElement(
-                    'label',
-                    null,
-                    React.createElement('input', { type: 'radio', name: 'option', value: '6/24', id: 'option-11' }),
-                    '6/24'
-                ),
-                React.createElement('span', { id: 'result-11' })
-            ),
-            React.createElement('hr', null),
-            React.createElement(
-                'div',
-                { id: 'block-12' },
-                React.createElement(
-                    'label',
-                    null,
-                    React.createElement('input', { type: 'radio', name: 'option', value: '6', id: 'option-12' }),
-                    '6'
-                ),
-                React.createElement('span', { id: 'result-12' })
-            ),
-            React.createElement('hr', null)
+                React.createElement('input', { type: 'radio', name: 'option', value: '6', id: 'option-2' }),
+                '6'
+            )
         )
     );
 }
@@ -51,46 +37,114 @@ function Question() {
 function PreQuiz(_ref) {
     var setQuizActive = _ref.setQuizActive;
 
+    var _React$useState = React.useState(''),
+        _React$useState2 = _slicedToArray(_React$useState, 2),
+        name = _React$useState2[0],
+        setName = _React$useState2[1];
+
+    var _React$useState3 = React.useState(''),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        email = _React$useState4[0],
+        setEmail = _React$useState4[1];
+
     return React.createElement(
         'div',
-        null,
+        { className: 'wrapper' },
         React.createElement(
-            'button',
-            { onClick: function onClick() {
-                    return setQuizActive(true);
-                } },
-            'Start Quiz'
+            'form',
+            { id: 'formContent', style: { padding: 10 } },
+            React.createElement(
+                'label',
+                null,
+                'Name:'
+            ),
+            React.createElement('input', { type: 'text', id: 'name', value: name, onChange: function onChange(e) {
+                    return setName(e.target.value);
+                } }),
+            React.createElement('br', null),
+            React.createElement(
+                'label',
+                null,
+                'Email:'
+            ),
+            React.createElement('input', { type: 'text', id: 'email', value: email, onChange: function onChange(e) {
+                    return setEmail(e.target.value);
+                } }),
+            React.createElement('br', null),
+            React.createElement(
+                'button',
+                { type: 'submit', onClick: function onClick() {
+                        return setQuizActive(true);
+                    } },
+                'Start Quiz'
+            ),
+            React.createElement(
+                'div',
+                { className: 'row' },
+                React.createElement(
+                    'div',
+                    { className: 'column' },
+                    React.createElement(
+                        'h3',
+                        null,
+                        'Risk'
+                    ),
+                    React.createElement(
+                        'p',
+                        null,
+                        'OneR'
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'column' },
+                    React.createElement(
+                        'h3',
+                        null,
+                        'Culture'
+                    ),
+                    React.createElement(
+                        'p',
+                        null,
+                        'OneC'
+                    )
+                )
+            )
         )
     );
 }
 
 function Quiz() {
-    var _React$useState = React.useState(false),
-        _React$useState2 = _slicedToArray(_React$useState, 2),
-        quizActive = _React$useState2[0],
-        setQuizActive = _React$useState2[1];
+    var _React$useState5 = React.useState(false),
+        _React$useState6 = _slicedToArray(_React$useState5, 2),
+        quizActive = _React$useState6[0],
+        setQuizActive = _React$useState6[1];
 
     return quizActive ? React.createElement(
         'div',
-        null,
-        React.createElement(Question, null),
+        { className: 'wrapper' },
         React.createElement(
             'div',
-            null,
+            { id: 'formContent' },
+            React.createElement(Question, null),
             React.createElement(
-                'button',
-                null,
-                'Previous'
-            ),
-            React.createElement(
-                'button',
-                null,
-                'Next'
-            ),
-            React.createElement(
-                'button',
-                null,
-                'Submit'
+                'div',
+                { style: { padding: 10 } },
+                React.createElement(
+                    'button',
+                    null,
+                    'Previous'
+                ),
+                React.createElement(
+                    'button',
+                    { style: { marginLeft: 5 } },
+                    'Next'
+                ),
+                React.createElement(
+                    'button',
+                    { style: { marginLeft: 5 } },
+                    'Submit'
+                )
             )
         )
     ) : React.createElement(PreQuiz, { setQuizActive: setQuizActive });
