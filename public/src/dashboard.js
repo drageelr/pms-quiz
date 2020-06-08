@@ -1,6 +1,35 @@
 const e = React.createElement
 
 function ElementsTable() {
+    const [elementsData, setElementsData] = React.useState([])
+    
+    function handleElementsUpload(e) {
+        const file = e.target.files[0]
+        const reader = new FileReader()
+        reader.readAsText(file)
+        reader.onload = (e) => {
+            const data = $.csv.toArrays(e.target.result)
+            if(data !== null && data !== "" && data.length > 1) { 
+                //needs better validation here according to type
+                data.shift() //removed header
+                const elements = data.map(row => ({
+                    name: row[1], 
+                    abv: row[2],
+                    type: row[3]
+                })
+                )
+                console.log(elements)
+                addElements(elements)
+                // setElementsData(data)
+            }
+            else{
+                //error on validating
+                console.log("Error validating the import.")
+            }
+        }
+        
+    }
+
     return (
         <div>
             <table id="view">
@@ -30,9 +59,14 @@ function ElementsTable() {
             </table>
 
             <div>
+                <button>Refresh</button>
                 <button>Download Elements Template</button>
+                <br/>
+                <input type="file" name="Upload Elements" id="txtFileUpload" accept=".csv" onChange={handleElementsUpload} />
                 <button>Upload Elements</button>
+                <br/>
                 <button>Download Elements</button>
+                <button>Wipe Elements</button>
             </div>
         </div>
     )
@@ -71,9 +105,11 @@ function QuestionsTable() {
             </table>
 
             <div>
+                <button>Refresh</button>
                 <button>Download Questions Template</button>
                 <button>Upload Questions</button>
                 <button>Download Questions</button>
+                <button>Wipe Questions</button>
             </div>
         </div>
     )

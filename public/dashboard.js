@@ -3,6 +3,37 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 var e = React.createElement;
 
 function ElementsTable() {
+    var _React$useState = React.useState([]),
+        _React$useState2 = _slicedToArray(_React$useState, 2),
+        elementsData = _React$useState2[0],
+        setElementsData = _React$useState2[1];
+
+    function handleElementsUpload(e) {
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = function (e) {
+            var data = $.csv.toArrays(e.target.result);
+            if (data !== null && data !== "" && data.length > 1) {
+                //needs better validation here according to type
+                data.shift(); //removed header
+                var elements = data.map(function (row) {
+                    return {
+                        name: row[1],
+                        abv: row[2],
+                        type: row[3]
+                    };
+                });
+                console.log(elements);
+                addElements(elements);
+                // setElementsData(data)
+            } else {
+                //error on validating
+                console.log("Error validating the import.");
+            }
+        };
+    }
+
     return React.createElement(
         "div",
         null,
@@ -101,17 +132,30 @@ function ElementsTable() {
             React.createElement(
                 "button",
                 null,
+                "Refresh"
+            ),
+            React.createElement(
+                "button",
+                null,
                 "Download Elements Template"
             ),
+            React.createElement("br", null),
+            React.createElement("input", { type: "file", name: "Upload Elements", id: "txtFileUpload", accept: ".csv", onChange: handleElementsUpload }),
             React.createElement(
                 "button",
                 null,
                 "Upload Elements"
             ),
+            React.createElement("br", null),
             React.createElement(
                 "button",
                 null,
                 "Download Elements"
+            ),
+            React.createElement(
+                "button",
+                null,
+                "Wipe Elements"
             )
         )
     );
@@ -219,6 +263,11 @@ function QuestionsTable() {
             React.createElement(
                 "button",
                 null,
+                "Refresh"
+            ),
+            React.createElement(
+                "button",
+                null,
                 "Download Questions Template"
             ),
             React.createElement(
@@ -230,16 +279,21 @@ function QuestionsTable() {
                 "button",
                 null,
                 "Download Questions"
+            ),
+            React.createElement(
+                "button",
+                null,
+                "Wipe Questions"
             )
         )
     );
 }
 
 function DashBoard() {
-    var _React$useState = React.useState('elements'),
-        _React$useState2 = _slicedToArray(_React$useState, 2),
-        tab = _React$useState2[0],
-        setTab = _React$useState2[1];
+    var _React$useState3 = React.useState('elements'),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        tab = _React$useState4[0],
+        setTab = _React$useState4[1];
 
     return React.createElement(
         "div",
