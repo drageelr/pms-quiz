@@ -10,7 +10,7 @@ let emailer = nodemailer.createTransport({
     }
 });
 
-let link = "https://pms-quiz.herokuapp.com/";
+let link = process.env.BASE_URL;
 
 function sendEmail (mailOptions) {
     emailer.sendMail(mailOptions, function(err , info) {
@@ -23,13 +23,13 @@ function sendEmail (mailOptions) {
 }
 
 exports.sendResultEmail = (emailTarget, token) => {
-    
+
     let mailOptions = {
         from: 'CMS <cmslums@gmail.com>',
         to: emailTarget,
         subject: 'PMS Quiz Result',
         html: `<h1>PMS Quiz Result</h1><p>Open this link to view your result: ${link}?token=${token}</p>`
     };
-    
+
     sendEmail(mailOptions);
 }

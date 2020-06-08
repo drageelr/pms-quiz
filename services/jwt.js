@@ -6,7 +6,7 @@ var Submission = require('../models/submission.model');
 var customError = require('../errors/errors');
 
 
-const secretKey = "8bfdaeed639560bfc78ce83fd57b2f8b9296387f";
+const secretKey = process.env.JWT_TOKEN;
 
 exports.signAdmin = (id, expires = '12h') => {
     return jwt.sign({_id: id}, secretKey, {expiresIn: expires});
