@@ -178,7 +178,7 @@ function QuestionsTable() {
     }
 
     function handleRefreshQuestions(){
-        fetchQuestions().then(Questions => setQuestionsData(Questions))
+        fetchQuestions().then(questions => setQuestionsData(questions))
     }
 
     function handleDownloadQuestionsTemplate(){

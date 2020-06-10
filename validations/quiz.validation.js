@@ -13,7 +13,7 @@ exports.submit = {
     body: Joi.object({
         name: Joi.string().required(),
         email: Joi.string().email().required(),
-        quesitons: Joi.array().items(Joi.object({
+        questions: Joi.array().items(Joi.object({
             questionId: Joi.number().required(),
             selectedOption: Joi.number().required()
         }))

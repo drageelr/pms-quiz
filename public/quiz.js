@@ -2,123 +2,211 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var e = React.createElement;
 
-function Question() {
-    return React.createElement(
-        'div',
-        null,
-        React.createElement(
-            'h3',
-            null,
-            'What fraction of a day is 6 hours?'
-        ),
-        React.createElement(
-            'div',
-            null,
-            React.createElement(
-                'label',
-                null,
-                React.createElement('input', { type: 'radio', name: 'option', value: '6/24', id: 'option-1' }),
-                '6/24'
-            )
-        ),
-        React.createElement(
-            'div',
-            null,
-            React.createElement(
-                'label',
-                null,
-                React.createElement('input', { type: 'radio', name: 'option', value: '6', id: 'option-2' }),
-                '6'
-            )
-        )
-    );
-}
-
-function PreQuiz(_ref) {
-    var setQuizActive = _ref.setQuizActive;
-
-    var _React$useState = React.useState(''),
+function Quiz() {
+    var _React$useState = React.useState(false),
         _React$useState2 = _slicedToArray(_React$useState, 2),
-        name = _React$useState2[0],
-        setName = _React$useState2[1];
+        quizActive = _React$useState2[0],
+        setQuizActive = _React$useState2[1];
 
     var _React$useState3 = React.useState(''),
         _React$useState4 = _slicedToArray(_React$useState3, 2),
-        email = _React$useState4[0],
-        setEmail = _React$useState4[1];
+        name = _React$useState4[0],
+        setName = _React$useState4[1];
 
-    return React.createElement(
-        'div',
-        { className: 'wrapper' },
-        React.createElement(
-            'form',
-            { id: 'formContent', style: { padding: 10 } },
+    var _React$useState5 = React.useState(''),
+        _React$useState6 = _slicedToArray(_React$useState5, 2),
+        email = _React$useState6[0],
+        setEmail = _React$useState6[1];
+
+    var _React$useState7 = React.useState([]),
+        _React$useState8 = _slicedToArray(_React$useState7, 2),
+        elementsData = _React$useState8[0],
+        setElementsData = _React$useState8[1];
+
+    var _React$useState9 = React.useState([]),
+        _React$useState10 = _slicedToArray(_React$useState9, 2),
+        questionsData = _React$useState10[0],
+        setQuestionsData = _React$useState10[1];
+
+    var _React$useState11 = React.useState(0),
+        _React$useState12 = _slicedToArray(_React$useState11, 2),
+        currentIndex = _React$useState12[0],
+        setCurrentIndex = _React$useState12[1];
+
+    React.useEffect(function () {
+        //get all elements and questions
+        fetchElements().then(function (elements) {
+            elements.forEach(function (element) {
+                element.checked = false;
+            });
+            setElementsData(elements);
+        });
+
+        fetchQuestions().then(function (questions) {
+            questions.forEach(function (questions) {
+                questions.selectedOption = -1;
+            });
+            setQuestionsData(questions);
+        });
+    }, []);
+
+    function handleStart() {
+        var count = 10;
+        var checkedElements = elementsData.filter(function (element) {
+            return element.checked;
+        });
+        var elementIds = checkedElements.map(function (checkedElement) {
+            return checkedElement.elementId;
+        });
+        setQuizActive(true);
+        // console.log("Selected elements: ", elementIds)
+
+        // start(elementIds, count).then(questions => {
+        //     questions.forEach(questions => {
+        //         questions.selectedOption = -1
+        //     })
+        //     setQuestionsData(questions)
+        //     setCurrentQuestionId(questions[0].questionId) //first question in fetched questions list
+        // })
+
+    }
+
+    function handleNext() {
+        if (currentIndex < questionsData.length - 1) {
+            setCurrentIndex(currentIndex + 1);
+        }
+    }
+
+    function handlePrevious() {
+        if (currentIndex > 0) {
+            setCurrentIndex(currentIndex - 1);
+        }
+    }
+
+    function handleSubmit() {
+        // submit(name, email, questionsData).then(token => {
+        //     result(token).then(res => {
+        //         console.log(res) //result, needs a page to display properly
+        //     })
+        // })
+    }
+
+    function Question(_ref) {
+        var currentQuestionId = _ref.currentQuestionId;
+
+        var questionData = questionsData.find(function (question) {
+            return question.questionId === currentQuestionId;
+        });
+        return React.createElement(
+            'div',
+            null,
             React.createElement(
-                'label',
+                'h3',
                 null,
-                'Name:'
+                questionData.text
             ),
-            React.createElement('input', { type: 'text', id: 'name', value: name, onChange: function onChange(e) {
-                    return setName(e.target.value);
-                } }),
-            React.createElement('br', null),
-            React.createElement(
-                'label',
-                null,
-                'Email:'
-            ),
-            React.createElement('input', { type: 'text', id: 'email', value: email, onChange: function onChange(e) {
-                    return setEmail(e.target.value);
-                } }),
-            React.createElement('br', null),
-            React.createElement(
-                'button',
-                { type: 'submit', onClick: function onClick() {
-                        return setQuizActive(true);
-                    } },
-                'Start Quiz'
-            ),
-            React.createElement(
-                'div',
-                { className: 'row' },
-                React.createElement(
+            questionData.options.map(function (option, index) {
+                return React.createElement(
                     'div',
-                    { className: 'column' },
+                    { key: index },
                     React.createElement(
-                        'h3',
+                        'label',
                         null,
-                        'Risk'
-                    ),
-                    React.createElement(
-                        'p',
-                        null,
-                        'OneR'
+                        React.createElement('input', { type: 'radio', value: index, id: index }),
+                        option.text
                     )
+                );
+            })
+        );
+    }
+
+    function PreQuiz() {
+
+        function handleElementCheck(e) {
+            setElementsData(elementsData.map(function (element) {
+                if (element.elementId == e.target.value) {
+                    element.checked = !element.checked;
+                }
+                return element;
+            }));
+        }
+
+        function ElementsCheckList(_ref2) {
+            var type = _ref2.type;
+
+            return elementsData.map(function (element, index) {
+                return element.type == type ? React.createElement(
+                    'div',
+                    { key: index },
+                    React.createElement('input', { type: 'checkbox', value: element.elementId,
+                        checked: element.checked, onChange: handleElementCheck }),
+                    React.createElement(
+                        'label',
+                        null,
+                        ' ',
+                        element.name
+                    ),
+                    React.createElement('br', null)
+                ) : null;
+            });
+        }
+
+        return React.createElement(
+            'div',
+            { className: 'wrapper' },
+            React.createElement(
+                'form',
+                { id: 'formContent', style: { padding: 10 } },
+                React.createElement(
+                    'label',
+                    null,
+                    'Name: '
+                ),
+                React.createElement('input', { type: 'text', id: 'name', value: name, onChange: function onChange(e) {
+                        return setName(e.target.value);
+                    } }),
+                React.createElement('br', null),
+                React.createElement(
+                    'label',
+                    null,
+                    'Email: '
+                ),
+                React.createElement('input', { type: 'text', id: 'email', value: email, onChange: function onChange(e) {
+                        return setEmail(e.target.value);
+                    } }),
+                React.createElement('br', null),
+                React.createElement(
+                    'button',
+                    { onClick: handleStart },
+                    ' Start Quiz '
                 ),
                 React.createElement(
                     'div',
-                    { className: 'column' },
+                    { className: 'row' },
                     React.createElement(
-                        'h3',
-                        null,
-                        'Culture'
+                        'div',
+                        { className: 'column' },
+                        React.createElement(
+                            'h3',
+                            null,
+                            'Risk'
+                        ),
+                        React.createElement(ElementsCheckList, { type: 'risk' })
                     ),
                     React.createElement(
-                        'p',
-                        null,
-                        'OneC'
+                        'div',
+                        { className: 'column' },
+                        React.createElement(
+                            'h3',
+                            null,
+                            'Culture'
+                        ),
+                        React.createElement(ElementsCheckList, { type: 'cult' })
                     )
                 )
             )
-        )
-    );
-}
-
-function Quiz() {
-    var _React$useState5 = React.useState(false),
-        _React$useState6 = _slicedToArray(_React$useState5, 2),
-        quizActive = _React$useState6[0],
-        setQuizActive = _React$useState6[1];
+        );
+    }
 
     return quizActive ? React.createElement(
         'div',
@@ -126,28 +214,28 @@ function Quiz() {
         React.createElement(
             'div',
             { id: 'formContent' },
-            React.createElement(Question, null),
+            React.createElement(Question, { currentQuestionId: questionsData[currentIndex].questionId }),
             React.createElement(
                 'div',
                 { style: { padding: 10 } },
                 React.createElement(
                     'button',
-                    null,
+                    { onClick: handlePrevious },
                     'Previous'
                 ),
                 React.createElement(
                     'button',
-                    { style: { marginLeft: 5 } },
+                    { style: { marginLeft: 5 }, onClick: handleNext },
                     'Next'
                 ),
                 React.createElement(
                     'button',
-                    { style: { marginLeft: 5 } },
+                    { style: { marginLeft: 5 }, onClick: handleSubmit },
                     'Submit'
                 )
             )
         )
-    ) : React.createElement(PreQuiz, { setQuizActive: setQuizActive });
+    ) : React.createElement(PreQuiz, null);
 }
 
 var domContainer = document.querySelector('#quiz');

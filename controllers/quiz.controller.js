@@ -30,6 +30,9 @@ exports.start = async (req, res, next) => {
 
         let reqElements = await Element.find({elementId: {$in: params.elementIds}}, '_id');
 
+        // error here: TypeError: Cannot read property 'length' of undefined
+        //        at exports.start (/home/zoraizq/Documents/pms-quiz/controllers/quiz.controller.js:33:51)
+
         if (reqElements.length != params.elements.length) {
             // throw bad request error
             throw new customError.ValidationError("invalid element(s)");

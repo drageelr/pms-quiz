@@ -246,8 +246,8 @@ function QuestionsTable() {
     }
 
     function handleRefreshQuestions() {
-        fetchQuestions().then(function (Questions) {
-            return setQuestionsData(Questions);
+        fetchQuestions().then(function (questions) {
+            return setQuestionsData(questions);
         });
     }
 

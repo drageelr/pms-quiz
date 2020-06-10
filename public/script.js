@@ -41,8 +41,7 @@ async function login() {
 async function addElements(elements) {
     let data = await apiCaller(base_url + "admin/add-elements", {
         elements
-    }, 200,
-    data => data)
+    }, 200)
     console.log(data)
     return data
 }
@@ -50,8 +49,7 @@ async function addElements(elements) {
 
 async function fetchElements() {
     let data = await apiCaller(base_url + "admin/fetch-elements", 
-    {}, 200,
-    data => data)
+    {}, 200)
     console.log(data)
     return data.elements
 }
@@ -59,8 +57,7 @@ async function fetchElements() {
 
 async function wipeElements() {
     let data = await apiCaller(base_url + "admin/wipe-elements", 
-    {}, 200,
-    data => data)
+    {}, 200)
     console.log(data)
     return (data.statusCode === 200)
 }
@@ -68,8 +65,7 @@ async function wipeElements() {
 async function addQuestions(questions) {
     let data = await apiCaller(base_url + "admin/add-questions", {
         questions
-    }, 200,
-    data => data)
+    }, 200)
     console.log(data)
     return data
 }
@@ -77,8 +73,7 @@ async function addQuestions(questions) {
 
 async function fetchQuestions() {
     let data = await apiCaller(base_url + "admin/fetch-questions", 
-    {}, 200,
-    data => data)
+    {}, 200)
     if (data) {
         console.log(data)
         return data.questions
@@ -88,12 +83,40 @@ async function fetchQuestions() {
 
 async function wipeQuestions() {
     let data = await apiCaller(base_url + "admin/wipe-questions", 
-    {}, 200,
-    data => data)
+    {}, 200)
     console.log(data)
     return (data.statusCode === 200)
 }
 
+
+async function start(elementIds, count) {
+    let data = await apiCaller(base_url + "quiz/start", 
+    {
+        elementIds, 
+        count
+    }, 200)
+    console.log(data)
+    return data.questions
+}
+
+
+async function submit(name, email, questions) {
+    let data = await apiCaller(base_url + "quiz/submit", 
+    {
+        name,
+        email,
+        questions
+    }, 200)
+    console.log(data)
+    return data.token
+}
+
+async function result() {
+    let data = await apiCaller(base_url + "quiz/result", 
+    {}, 200)
+    console.log(data)
+    return data.result
+}
 
 
 /**
@@ -105,7 +128,7 @@ API Caller helper to refactor common API code that requires bearer tokens (all h
 @param {function} dataReturner data returning function, processes data to return it in a specific format
 */
 
-async function apiCaller(api, body, successCode, dataReturner, ) {
+async function apiCaller(api, body, successCode) {
     try {
         let req_init = {
         method: 'POST',
@@ -129,7 +152,7 @@ async function apiCaller(api, body, successCode, dataReturner, ) {
             ? `${data.statusCode}: ${data.message} - ${JSON.stringify(data.error.details).replace(/[\[\]\{\}"'\\]+/g, '').split(':').pop()}`
             : `${data.statusCode}: ${data.message}`) 
         }
-        return dataReturner(data)
+        return data
         }
         throw new Error(`${res.status}, ${res.statusText}`) 
     }
