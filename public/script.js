@@ -25,8 +25,8 @@ async function login() {
                 : `${data.statusCode}: ${data.message}`) 
             }
             
-            console.log(data)
-            console.log(data.token)
+            localStorage.token = data.token
+            window.location.assign("/dashboard.html")
         }
         else {
             throw new Error(`${res.status}, ${res.statusText}`) 
@@ -44,6 +44,7 @@ async function addElements(elements) {
     }, 200,
     data => data)
     console.log(data)
+    return data
 }
 
 
@@ -52,6 +53,7 @@ async function fetchElements() {
     {}, 200,
     data => data)
     console.log(data)
+    return data.elements
 }
 
 
@@ -60,6 +62,7 @@ async function wipeElements() {
     {}, 200,
     data => data)
     console.log(data)
+    return (data.statusCode === 200)
 }
 
 async function addQuestions(questions) {
@@ -68,6 +71,7 @@ async function addQuestions(questions) {
     }, 200,
     data => data)
     console.log(data)
+    return data
 }
 
 
@@ -75,7 +79,10 @@ async function fetchQuestions() {
     let data = await apiCaller(base_url + "admin/fetch-questions", 
     {}, 200,
     data => data)
-    console.log(data)
+    if (data) {
+        console.log(data)
+        return data.questions
+    }
 }
 
 
@@ -84,6 +91,7 @@ async function wipeQuestions() {
     {}, 200,
     data => data)
     console.log(data)
+    return (data.statusCode === 200)
 }
 
 
@@ -104,15 +112,14 @@ async function apiCaller(api, body, successCode, dataReturner, ) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.token}`, 
         },
         }
         // if body is an empty object, do not include it
         if (!(Object.keys(body).length === 0 && body.constructor === Object)){
-        req_init['body'] = JSON.stringify(body)
+            req_init['body'] = JSON.stringify(body)
         }
         
-        const res = await fetch(api, req_init)
+        const res = await fetch(api+`?token=${localStorage.token}`, req_init)
         
         if (res.ok) {
         const data = await res.json()

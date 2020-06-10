@@ -10,7 +10,7 @@ var customError = require('../errors/errors');
 
 function validateElements(elements) {
     for (let i = 0; i < elements.length; i++) {
-        if (elements.type != "risk" && elements.type != "cult") {
+        if (elements[i].type != "risk" && elements[i].type != "cult") {
             return '"type" of element at position "' + (i + 1) + '" is invalid. Type must be "risk" or "cult"';
         }
     }
@@ -18,7 +18,7 @@ function validateElements(elements) {
     return undefined;
 }
 
-function validateQuesitons(questions, elementIds) {
+function validateQuestions(questions, elementIds) {
     for (let q = 0; q < questions.length; q++) {
         let e = 0;
         for ( ; e < elementIds.length; e++) {
@@ -56,7 +56,7 @@ exports.login = async (req, res, next) => {
             statusCode: 200,
             statusName: "OK",
             message: "Logged In Successfully!",
-            token: jwt.verifyAdmin(reqAdmin._id)
+            token: jwt.signAdmin(reqAdmin._id)
         });
     } catch(err) {
         next(err);
@@ -175,7 +175,7 @@ exports.addQuestions = async (req, res, next) => {
             throw new customError.ValidationError("invalid element(s)");
         }
 
-        let validationError = validateQuesitons(params.questions, reqElements.map(e => ({Id: e.elementId, _id: e._id})));
+        let validationError = validateQuestions(params.questions, reqElements.map(e => ({Id: e.elementId, _id: e._id})));
 
         if (validationError) {
             // throw bad request error
@@ -215,26 +215,28 @@ exports.fetchQuestions = async (req, res, next) => {
         let reqQuestions = await Question.find({});
 
         let questions = [];
+        
+        if (reqQuestions.length) {
+            for (let q of reqQuestions) {
+                let questionObj = {
+                    questionId: q.questionId,
+                    text: q.text,
+                    options: q.options.map(o => ({text: o.text})),
+                    correctOption: q.correctOption,
+                }
 
-        for (let q of reqQuestions) {
-            let questionObj = {
-                questionId: q.questionId,
-                text: q.text,
-                options: q.map(o => o.text),
-                correctOption: q.correctOption,
+                let reqElement = await Element.findById(q.elementId, 'elementId');
+
+                questionObj.elementId = reqElement.elementId;
+
+                questions.push(questionObj);
             }
-
-            let reqElement = await Element.findById(q.elementId, 'elementId');
-
-            questionObj.elementId = reqElement.elementId;
-
-            questions.push(questionObj);
         }
 
         res.json({
             statusCode: 200,
             statusName: "OK",
-            message: "Element(s) Fetched Successfully!",
+            message: "Question(s) Fetched Successfully!",
             questions: questions
         })
     } catch(err) {

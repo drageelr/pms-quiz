@@ -30,6 +30,7 @@ exports.errorHandler = (err, req, res, next) => {
             }
         });
     } else {
+        console.log(err)
         res.json({
             statusCode: 500,
             statusName: "INTERNAL SERVER ERROR",

@@ -13,6 +13,7 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-validation": "^3.0.5",
+    "jquery-csv": "^1.0.11",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.17",
     "mongoose-plugin-autoinc": "^1.1.9",
