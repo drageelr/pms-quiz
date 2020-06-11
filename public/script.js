@@ -110,16 +110,19 @@ async function submit(name, email, questions) {
         questions
     }, 200)
     console.log(data)
-    return data.token
+    if (data) {
+        return data.token
+    }
 }
 
 async function result(token) {
+    localStorage.token = token //update token
     let data = await apiCaller(base_url + "quiz/result", 
-    {
-        token
-    }, 200)
-    console.log(data)
-    return data.result
+    {}, 200)
+
+    if (data){
+        return data.result
+    }
 }
 
 

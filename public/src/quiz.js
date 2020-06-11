@@ -28,6 +28,7 @@ function Quiz() {
             alert("You have entered an invalid email address!")
             return false
         }
+
         setQuizActive(true)
         const count = 10
         const checkedElements = elementsData.filter(element => element.checked)

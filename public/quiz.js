@@ -52,6 +52,7 @@ function Quiz() {
             alert("You have entered an invalid email address!");
             return false;
         }
+
         setQuizActive(true);
         var count = 10;
         var checkedElements = elementsData.filter(function (element) {
