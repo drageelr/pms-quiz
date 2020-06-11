@@ -41,16 +41,10 @@ function Quiz() {
             });
             setElementsData(elements);
         });
-
-        // fetchQuestions().then(questions => {
-        //     questions.forEach(questions => {
-        //         questions.selectedOption = -1
-        //     })
-        //     setQuestionsData(questions)
-        // })
     }, []);
 
     function handleStart() {
+        setQuizActive(true);
         var count = 10;
         var checkedElements = elementsData.filter(function (element) {
             return element.checked;
@@ -58,14 +52,13 @@ function Quiz() {
         var elementIds = checkedElements.map(function (checkedElement) {
             return checkedElement.elementId;
         });
-        setQuizActive(true);
 
         start(elementIds, count).then(function (questions) {
             questions.forEach(function (questions) {
                 questions.selectedOption = -1;
             });
             setQuestionsData(questions);
-            setCurrentQuestionId(questions[0].questionId); //first question in fetched questions list
+            //currentIndex = 0
         });
     }
 
@@ -82,20 +75,37 @@ function Quiz() {
     }
 
     function handleSubmit() {
-        // submit(name, email, questionsData).then(token => {
-        //     result(token).then(res => {
-        //         console.log(res) //result, needs a page to display properly
-        //     })
-        // })
+        var questions = questionsData.map(function (questionData) {
+            return {
+                questionId: questionData.questionId,
+                selectedOption: questionData.selectedOption
+            };
+        });
+        submit(name, email, questions).then(function (token) {
+            result(token).then(function (res) {
+                console.log(res); //result, needs a page to display properly
+            });
+        });
     }
 
     function Question(_ref) {
-        var currentQuestionId = _ref.currentQuestionId;
+        var currentQuestionId = _ref.currentQuestionId,
+            questionIndex = _ref.questionIndex;
 
-        var questionData = questionsData.find(function (question) {
-            return question.questionId === currentQuestionId;
-        });
-        return React.createElement(
+        var questionData = questionsData[questionIndex];
+
+        function handleOptionSelect(e) {
+            var selectedOption = e.target.value;
+
+            setQuestionsData(questionsData.map(function (question) {
+                if (question.questionId === currentQuestionId) {
+                    question.selectedOption = selectedOption;
+                }
+                return question;
+            }));
+        }
+
+        return questionData !== undefined ? React.createElement(
             'div',
             null,
             React.createElement(
@@ -110,15 +120,28 @@ function Quiz() {
                     React.createElement(
                         'label',
                         null,
-                        React.createElement('input', { type: 'radio', value: index, id: index }),
-                        option.text
+                        React.createElement('input', {
+                            type: 'radio',
+                            value: index,
+                            checked: Number(questionsData[questionIndex].selectedOption) === index,
+                            onChange: handleOptionSelect }),
+                        option
                     )
                 );
             })
-        );
+        ) : null;
     }
 
     function PreQuiz() {
+        var _React$useState13 = React.useState(name),
+            _React$useState14 = _slicedToArray(_React$useState13, 2),
+            localName = _React$useState14[0],
+            setLocalName = _React$useState14[1];
+
+        var _React$useState15 = React.useState(email),
+            _React$useState16 = _slicedToArray(_React$useState15, 2),
+            localEmail = _React$useState16[0],
+            setLocalEmail = _React$useState16[1];
 
         function handleElementCheck(e) {
             setElementsData(elementsData.map(function (element) {
@@ -160,18 +183,30 @@ function Quiz() {
                     null,
                     'Name: '
                 ),
-                React.createElement('input', { type: 'text', id: 'name', value: name, onChange: function onChange(e) {
-                        return setName(e.target.value);
-                    } }),
+                React.createElement('input', { type: 'text', id: 'name',
+                    value: localName,
+                    onChange: function onChange(e) {
+                        return setLocalName(e.target.value);
+                    },
+                    onBlur: function onBlur() {
+                        return setName(localName);
+                    } //set final name on blur for perf
+                }),
                 React.createElement('br', null),
                 React.createElement(
                     'label',
                     null,
                     'Email: '
                 ),
-                React.createElement('input', { type: 'text', id: 'email', value: email, onChange: function onChange(e) {
-                        return setEmail(e.target.value);
-                    } }),
+                React.createElement('input', { type: 'text', id: 'email',
+                    value: localEmail,
+                    onChange: function onChange(e) {
+                        return setLocalEmail(e.target.value);
+                    },
+                    onBlur: function onBlur() {
+                        return setEmail(localEmail);
+                    }
+                }),
                 React.createElement('br', null),
                 React.createElement(
                     'button',
@@ -212,7 +247,10 @@ function Quiz() {
         React.createElement(
             'div',
             { id: 'formContent' },
-            React.createElement(Question, { currentQuestionId: questionsData[currentIndex].questionId }),
+            React.createElement(Question, {
+                questionIndex: currentIndex,
+                currentQuestionId: questionsData[currentIndex] !== undefined ? questionsData[currentIndex].questionId : -1
+            }),
             React.createElement(
                 'div',
                 { style: { padding: 10 } },

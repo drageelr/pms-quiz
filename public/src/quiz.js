@@ -15,28 +15,21 @@ function Quiz() {
             })
             setElementsData(elements)
         })
-        
-        // fetchQuestions().then(questions => {
-        //     questions.forEach(questions => {
-        //         questions.selectedOption = -1
-        //     })
-        //     setQuestionsData(questions)
-        // })
     }, [])
 
-
+    
     function handleStart(){
+        setQuizActive(true)
         const count = 10
         const checkedElements = elementsData.filter(element => element.checked)
         const elementIds = checkedElements.map(checkedElement => checkedElement.elementId)
-        setQuizActive(true)
         
         start(elementIds, count).then(questions => {
             questions.forEach(questions => {
                 questions.selectedOption = -1
             })
             setQuestionsData(questions)
-            setCurrentQuestionId(questions[0].questionId) //first question in fetched questions list
+            //currentIndex = 0
         })
     }
 
@@ -53,32 +46,58 @@ function Quiz() {
     }
 
     function handleSubmit(){
-        // submit(name, email, questionsData).then(token => {
-        //     result(token).then(res => {
-        //         console.log(res) //result, needs a page to display properly
-        //     })
-        // })
+        let questions = questionsData.map(questionData => ({
+            questionId: questionData.questionId,
+            selectedOption: questionData.selectedOption
+        })
+        )
+        submit(name, email, questions).then(token => {
+            result(token).then(res => {
+                console.log(res) //result, needs a page to display properly
+            })
+        })
     }
 
-    function Question({currentQuestionId}) {
-        const questionData = questionsData.find(question => question.questionId === currentQuestionId)
+    function Question({currentQuestionId, questionIndex}) {
+        const questionData = questionsData[questionIndex]
+
+        function handleOptionSelect(e){
+            const selectedOption = e.target.value
+            
+            setQuestionsData(questionsData.map(question => {
+                if (question.questionId === currentQuestionId) {
+                    question.selectedOption = selectedOption
+                }
+                return question
+                })
+            )
+        }
+
         return (
+            questionData !== undefined ?
             <div>
                 <h3>{questionData.text}</h3>        
                 {
                     questionData.options.map((option, index) => 
                         <div key={index}>
                             <label>
-                            <input type='radio' value={index} id={index}/>
-                            {option.text}</label>
+                            <input 
+                            type='radio' 
+                            value={index} 
+                            checked={Number(questionsData[questionIndex].selectedOption) === index}
+                            onChange={handleOptionSelect}/>
+                            {option}</label>
                         </div>
                     )
                 }
             </div>
+            : null
         )
     }
 
     function PreQuiz() {
+        const [localName, setLocalName] = React.useState(name)
+        const [localEmail, setLocalEmail] = React.useState(email)
         
         function handleElementCheck(e) {
             setElementsData(elementsData.map(element => {
@@ -107,10 +126,18 @@ function Quiz() {
             <div className="wrapper">
                 <form id="formContent" style={{padding: 10}}>
                     <label>Name: </label>
-                    <input type="text" id="name" value={name} onChange={e => setName(e.target.value)}/>
+                    <input type="text" id="name" 
+                    value={localName} 
+                    onChange={e => setLocalName(e.target.value)}
+                    onBlur={() => setName(localName)} //set final name on blur for perf
+                    />
                     <br/>
                     <label>Email: </label>
-                    <input type="text" id="email" value={email} onChange={e => setEmail(e.target.value)}/>
+                    <input type="text" id="email" 
+                    value={localEmail} 
+                    onChange={e => setLocalEmail(e.target.value)}
+                    onBlur={() => setEmail(localEmail)} 
+                    />
                     <br/>
                     <button onClick={handleStart}> Start Quiz </button>
                     <div className="row">
@@ -132,7 +159,10 @@ function Quiz() {
         quizActive ?
         <div className="wrapper">
             <div id="formContent">
-                <Question currentQuestionId={questionsData[currentIndex].questionId}/>
+                <Question 
+                questionIndex={currentIndex}
+                currentQuestionId={questionsData[currentIndex] !== undefined ? questionsData[currentIndex].questionId : -1}
+                />
                 <div style={{padding: 10}}>
                     <button onClick={handlePrevious}>Previous</button>
                     <button style={{marginLeft: 5}} onClick={handleNext}>Next</button>

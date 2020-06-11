@@ -96,7 +96,9 @@ async function start(elementIds, count) {
         count
     }, 200)
     console.log(data)
-    return data.questions
+    if (data){
+        return data.questions
+    }
 }
 
 
@@ -111,9 +113,11 @@ async function submit(name, email, questions) {
     return data.token
 }
 
-async function result() {
+async function result(token) {
     let data = await apiCaller(base_url + "quiz/result", 
-    {}, 200)
+    {
+        token
+    }, 200)
     console.log(data)
     return data.result
 }
