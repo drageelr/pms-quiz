@@ -42,12 +42,12 @@ function Quiz() {
             setElementsData(elements);
         });
 
-        fetchQuestions().then(function (questions) {
-            questions.forEach(function (questions) {
-                questions.selectedOption = -1;
-            });
-            setQuestionsData(questions);
-        });
+        // fetchQuestions().then(questions => {
+        //     questions.forEach(questions => {
+        //         questions.selectedOption = -1
+        //     })
+        //     setQuestionsData(questions)
+        // })
     }, []);
 
     function handleStart() {
@@ -59,16 +59,14 @@ function Quiz() {
             return checkedElement.elementId;
         });
         setQuizActive(true);
-        // console.log("Selected elements: ", elementIds)
 
-        // start(elementIds, count).then(questions => {
-        //     questions.forEach(questions => {
-        //         questions.selectedOption = -1
-        //     })
-        //     setQuestionsData(questions)
-        //     setCurrentQuestionId(questions[0].questionId) //first question in fetched questions list
-        // })
-
+        start(elementIds, count).then(function (questions) {
+            questions.forEach(function (questions) {
+                questions.selectedOption = -1;
+            });
+            setQuestionsData(questions);
+            setCurrentQuestionId(questions[0].questionId); //first question in fetched questions list
+        });
     }
 
     function handleNext() {

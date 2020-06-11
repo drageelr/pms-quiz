@@ -16,12 +16,12 @@ function Quiz() {
             setElementsData(elements)
         })
         
-        fetchQuestions().then(questions => {
-            questions.forEach(questions => {
-                questions.selectedOption = -1
-            })
-            setQuestionsData(questions)
-        })
+        // fetchQuestions().then(questions => {
+        //     questions.forEach(questions => {
+        //         questions.selectedOption = -1
+        //     })
+        //     setQuestionsData(questions)
+        // })
     }, [])
 
 
@@ -30,17 +30,14 @@ function Quiz() {
         const checkedElements = elementsData.filter(element => element.checked)
         const elementIds = checkedElements.map(checkedElement => checkedElement.elementId)
         setQuizActive(true)
-        // console.log("Selected elements: ", elementIds)
         
-        // start(elementIds, count).then(questions => {
-        //     questions.forEach(questions => {
-        //         questions.selectedOption = -1
-        //     })
-        //     setQuestionsData(questions)
-        //     setCurrentQuestionId(questions[0].questionId) //first question in fetched questions list
-        // })
-        
-        
+        start(elementIds, count).then(questions => {
+            questions.forEach(questions => {
+                questions.selectedOption = -1
+            })
+            setQuestionsData(questions)
+            setCurrentQuestionId(questions[0].questionId) //first question in fetched questions list
+        })
     }
 
     function handleNext(){

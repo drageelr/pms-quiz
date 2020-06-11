@@ -30,10 +30,7 @@ exports.start = async (req, res, next) => {
 
         let reqElements = await Element.find({elementId: {$in: params.elementIds}}, '_id');
 
-        // error here: TypeError: Cannot read property 'length' of undefined
-        //        at exports.start (/home/zoraizq/Documents/pms-quiz/controllers/quiz.controller.js:33:51)
-
-        if (reqElements.length != params.elements.length) {
+        if (reqElements.length != params.elementIds.length) {
             // throw bad request error
             throw new customError.ValidationError("invalid element(s)");
         }
@@ -46,13 +43,27 @@ exports.start = async (req, res, next) => {
         }
 
         let questionBank = reqQuestions.map(q => ({questionId: q.questionId, text: q.text, options: q.options.map(o => o.text)}));
-        params.count = Math.min(params.count, reqQuestions.length);
-        let questions = [];
-        for ( ; params.count != 0; params.count--) {
-            let rndIndex = Math.round(Math.random() * questionBank.length);
-            questions.push(questionBank[rndIndex]);
-            questionBank = questionBank.slice(0, rndIndex) + questionBank(rndIndex + 1, questionBank.length);
+
+        function shuffle(array) {
+            var currentIndex = array.length, temporaryValue, randomIndex;
+    
+            // While there remain elements to shuffle...
+            while (0 !== currentIndex) {
+    
+                // Pick a remaining element...
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+    
+                // And swap it with the current element.
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+    
+            return array;
         }
+
+        let questions = shuffle(questionBank);
 
         res.json({
             statusCode: 200,
