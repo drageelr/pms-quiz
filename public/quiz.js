@@ -44,6 +44,14 @@ function Quiz() {
     }, []);
 
     function handleStart() {
+        if (name == '' || email == '') {
+            alert("Name and email fields must not be empty!");
+            return false;
+        }
+        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            alert("You have entered an invalid email address!");
+            return false;
+        }
         setQuizActive(true);
         var count = 10;
         var checkedElements = elementsData.filter(function (element) {
@@ -191,6 +199,7 @@ function Quiz() {
                     onBlur: function onBlur() {
                         return setName(localName);
                     } //set final name on blur for perf
+                    , required: true
                 }),
                 React.createElement('br', null),
                 React.createElement(
@@ -205,7 +214,8 @@ function Quiz() {
                     },
                     onBlur: function onBlur() {
                         return setEmail(localEmail);
-                    }
+                    },
+                    required: true
                 }),
                 React.createElement('br', null),
                 React.createElement(

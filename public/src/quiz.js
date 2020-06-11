@@ -19,11 +19,20 @@ function Quiz() {
 
     
     function handleStart(){
+        if (name == '' || email == '') {
+            alert("Name and email fields must not be empty!")
+            return false
+        }
+        if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)))
+        {
+            alert("You have entered an invalid email address!")
+            return false
+        }
         setQuizActive(true)
         const count = 10
         const checkedElements = elementsData.filter(element => element.checked)
         const elementIds = checkedElements.map(checkedElement => checkedElement.elementId)
-        
+
         start(elementIds, count).then(questions => {
             questions.forEach(questions => {
                 questions.selectedOption = -1
@@ -130,6 +139,7 @@ function Quiz() {
                     value={localName} 
                     onChange={e => setLocalName(e.target.value)}
                     onBlur={() => setName(localName)} //set final name on blur for perf
+                    required
                     />
                     <br/>
                     <label>Email: </label>
@@ -137,6 +147,7 @@ function Quiz() {
                     value={localEmail} 
                     onChange={e => setLocalEmail(e.target.value)}
                     onBlur={() => setEmail(localEmail)} 
+                    required
                     />
                     <br/>
                     <button onClick={handleStart}> Start Quiz </button>
