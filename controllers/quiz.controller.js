@@ -123,7 +123,7 @@ exports.result = async (req, res, next) => {
             let resultObj = {
                 text: reqQuestions[i].text,
                 options: reqQuestions[i].options.map(o => o.text),
-                correctOption: reqQuestions[i].correctOption,
+                correct: reqQuestions[i].correctOption == reqSubmission.questions[i].selectedOption ? true : false,
                 selectedOption: reqSubmission.questions[i].selectedOption
             };
 
