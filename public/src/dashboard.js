@@ -242,6 +242,7 @@ function QuestionsTable() {
                 </thead>
                 <tbody>
                 {
+                    questionsData !== undefined &&
                     questionsData.map((questionsObj, index) => (
                         <tr key={index}>
                             <td>{questionsObj.questionId}</td>
@@ -267,8 +268,7 @@ function QuestionsTable() {
 
                 </tbody>
             </table>
-
-            <div>
+            <div >
                 <button onClick={handleRefreshQuestions}>Refresh</button>
                 <button onClick={handleDownloadQuestionsTemplate}>Download Questions Template</button>
                 <br/>
@@ -288,11 +288,20 @@ function QuestionsTable() {
 function DashBoard() {
     const [tab, setTab] = React.useState('elements')
 
+    const tabStyle = {
+        textDecoration: "none",
+        color: "#222222",
+        background: "white",
+        border: "none",
+        boxShadow: "",
+        fontWeight: "normal"
+    }
+    
     return (
         <div>
             <div className="tab">
-                <button className="tablinks" onClick={() => setTab('elements')}>Elements</button>
-                <button className="tablinks" onClick={() => setTab('questions')}>Questions</button>
+                <button style={tabStyle} onClick={() => setTab('elements')}>Elements</button>
+                <button style={tabStyle} onClick={() => setTab('questions')}>Questions</button>
             </div>
 
             {
