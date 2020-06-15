@@ -120,12 +120,21 @@ exports.result = async (req, res, next) => {
 
         let result = [];
         for (let i = 0; i < reqQuestions.length; i++) {
-            let resultObj = {
-                text: reqQuestions[i].text,
-                options: reqQuestions[i].options.map(o => o.text),
-                correct: reqQuestions[i].correctOption == reqSubmission.questions[i].selectedOption ? true : false,
-                selectedOption: reqSubmission.questions[i].selectedOption
-            };
+            let s = 0;
+            for (; s < reqSubmission.questions.length; s++) {            
+                if (reqSubmission.questions[s].questionId.toString() == reqQuestions[i]._id.toString()) {
+                    break;
+                }
+            }
+            let resultObj = {};
+            if (s != reqQuestions.length) {
+                resultObj = {
+                    text: reqQuestions[i].text,
+                    options: reqQuestions[i].options.map(o => o.text),
+                    correct: reqQuestions[i].correctOption == reqSubmission.questions[s].selectedOption ? true : false,
+                    selectedOption: reqSubmission.questions[s].selectedOption
+                };
+            }
 
             result.push(resultObj);
         }

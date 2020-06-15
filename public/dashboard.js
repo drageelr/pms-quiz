@@ -227,7 +227,6 @@ function QuestionsTable() {
                     return question;
                 });
 
-                console.log(questions);
 
                 addQuestions(questions);
 

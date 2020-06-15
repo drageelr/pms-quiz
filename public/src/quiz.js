@@ -2,14 +2,12 @@ const e = React.createElement
 
 function Quiz() {
     const [quizActive, setQuizActive] = React.useState(false)
-    const [quizComplete, setQuizComplete] = React.useState(false)
     const [name, setName] = React.useState('')
     const [email, setEmail] = React.useState('')
     const [count, setCount] = React.useState(10)
     const [elementsData, setElementsData] = React.useState([])
     const [questionsData, setQuestionsData] = React.useState([])
     const [currentIndex, setCurrentIndex] = React.useState(0)
-    const [quizResult, setQuizResult] = React.useState([])
 
     React.useEffect(() => { //get all elements and questions
         fetchElements().then(elements => {
@@ -67,14 +65,11 @@ function Quiz() {
             selectedOption: questionData.selectedOption
         })
         )
+        // console.log("Submitting", questions)
         submit(name, email, questions).then(token => {
-            result(token).then(res => {
-                console.log(res) //result, needs a page to display properly
-                setQuizResult(res)
-                setQuizComplete(true)
-                setQuizActive(false)
-            })
+            window.location.assign(`/result.html?token=${token}`)
         })
+
     }
 
     function Question({currentQuestionId, questionIndex}) {
@@ -82,7 +77,6 @@ function Quiz() {
 
         function handleOptionSelect(e){
             const selectedOption = Number(e.target.value)
-            console.log(selectedOption)
             setQuestionsData(questionsData.map(question => {
                 if (question.questionId === currentQuestionId) {
                     question.selectedOption = selectedOption
@@ -90,7 +84,6 @@ function Quiz() {
                 return question
             })
             )
-            console.log(questionsData)
         }
 
         return (
@@ -210,44 +203,10 @@ function Quiz() {
         )
     }
 
-    function PostQuiz(){
-        return (
-            <div className="wrapper">
-                {
-                quizResult.map((questionData,index) => (
-                    <div key={index} id="formContent" style={{marginBottom: 10}}>
-                        <h3>{questionData.text}</h3>        
-                        {
-                            questionData.options.map((option, index) => 
-                                <div key={index}>
-                                    <label>
-                                    <input 
-                                    type='radio' 
-                                    value={index} 
-                                    checked={Number(questionData.selectedOption) === index}
-                                    onChange={()=>{}}/>
-                                    {option}</label>
-                                </div>
-                            )
-                        }
-                        {
-                            questionData.correct ?
-                            <h6 style={{color: "green"}}> ✅ Correct</h6>
-                            : <h6 style={{color: "red"}}> ❌ Wrong.</h6>
-
-                        }
-                    </div>
-                ))
-                }
-            </div>
-        )
-    }
 
     return (
         quizActive ?
         <QuizSession/>
-        : quizComplete ? 
-        <PostQuiz/>
         : <PreQuiz/>
     )
 }

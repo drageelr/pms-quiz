@@ -8,45 +8,35 @@ function Quiz() {
         quizActive = _React$useState2[0],
         setQuizActive = _React$useState2[1];
 
-    var _React$useState3 = React.useState(false),
+    var _React$useState3 = React.useState(''),
         _React$useState4 = _slicedToArray(_React$useState3, 2),
-        quizComplete = _React$useState4[0],
-        setQuizComplete = _React$useState4[1];
+        name = _React$useState4[0],
+        setName = _React$useState4[1];
 
     var _React$useState5 = React.useState(''),
         _React$useState6 = _slicedToArray(_React$useState5, 2),
-        name = _React$useState6[0],
-        setName = _React$useState6[1];
+        email = _React$useState6[0],
+        setEmail = _React$useState6[1];
 
-    var _React$useState7 = React.useState(''),
+    var _React$useState7 = React.useState(10),
         _React$useState8 = _slicedToArray(_React$useState7, 2),
-        email = _React$useState8[0],
-        setEmail = _React$useState8[1];
+        count = _React$useState8[0],
+        setCount = _React$useState8[1];
 
-    var _React$useState9 = React.useState(10),
+    var _React$useState9 = React.useState([]),
         _React$useState10 = _slicedToArray(_React$useState9, 2),
-        count = _React$useState10[0],
-        setCount = _React$useState10[1];
+        elementsData = _React$useState10[0],
+        setElementsData = _React$useState10[1];
 
     var _React$useState11 = React.useState([]),
         _React$useState12 = _slicedToArray(_React$useState11, 2),
-        elementsData = _React$useState12[0],
-        setElementsData = _React$useState12[1];
+        questionsData = _React$useState12[0],
+        setQuestionsData = _React$useState12[1];
 
-    var _React$useState13 = React.useState([]),
+    var _React$useState13 = React.useState(0),
         _React$useState14 = _slicedToArray(_React$useState13, 2),
-        questionsData = _React$useState14[0],
-        setQuestionsData = _React$useState14[1];
-
-    var _React$useState15 = React.useState(0),
-        _React$useState16 = _slicedToArray(_React$useState15, 2),
-        currentIndex = _React$useState16[0],
-        setCurrentIndex = _React$useState16[1];
-
-    var _React$useState17 = React.useState([]),
-        _React$useState18 = _slicedToArray(_React$useState17, 2),
-        quizResult = _React$useState18[0],
-        setQuizResult = _React$useState18[1];
+        currentIndex = _React$useState14[0],
+        setCurrentIndex = _React$useState14[1];
 
     React.useEffect(function () {
         //get all elements and questions
@@ -108,13 +98,9 @@ function Quiz() {
                 selectedOption: questionData.selectedOption
             };
         });
+        // console.log("Submitting", questions)
         submit(name, email, questions).then(function (token) {
-            result(token).then(function (res) {
-                console.log(res); //result, needs a page to display properly
-                setQuizResult(res);
-                setQuizComplete(true);
-                setQuizActive(false);
-            });
+            window.location.assign('/result.html?token=' + token);
         });
     }
 
@@ -126,14 +112,12 @@ function Quiz() {
 
         function handleOptionSelect(e) {
             var selectedOption = Number(e.target.value);
-            console.log(selectedOption);
             setQuestionsData(questionsData.map(function (question) {
                 if (question.questionId === currentQuestionId) {
                     question.selectedOption = selectedOption;
                 }
                 return question;
             }));
-            console.log(questionsData);
         }
 
         return questionData !== undefined && React.createElement(
@@ -164,20 +148,20 @@ function Quiz() {
     }
 
     function PreQuiz() {
-        var _React$useState19 = React.useState(name),
+        var _React$useState15 = React.useState(name),
+            _React$useState16 = _slicedToArray(_React$useState15, 2),
+            localName = _React$useState16[0],
+            setLocalName = _React$useState16[1];
+
+        var _React$useState17 = React.useState(email),
+            _React$useState18 = _slicedToArray(_React$useState17, 2),
+            localEmail = _React$useState18[0],
+            setLocalEmail = _React$useState18[1];
+
+        var _React$useState19 = React.useState(count),
             _React$useState20 = _slicedToArray(_React$useState19, 2),
-            localName = _React$useState20[0],
-            setLocalName = _React$useState20[1];
-
-        var _React$useState21 = React.useState(email),
-            _React$useState22 = _slicedToArray(_React$useState21, 2),
-            localEmail = _React$useState22[0],
-            setLocalEmail = _React$useState22[1];
-
-        var _React$useState23 = React.useState(count),
-            _React$useState24 = _slicedToArray(_React$useState23, 2),
-            localCount = _React$useState24[0],
-            setLocalCount = _React$useState24[1];
+            localCount = _React$useState20[0],
+            setLocalCount = _React$useState20[1];
 
         function handleElementCheck(e) {
             setElementsData(elementsData.map(function (element) {
@@ -349,50 +333,7 @@ function Quiz() {
         );
     }
 
-    function PostQuiz() {
-        return React.createElement(
-            'div',
-            { className: 'wrapper' },
-            quizResult.map(function (questionData, index) {
-                return React.createElement(
-                    'div',
-                    { key: index, id: 'formContent', style: { marginBottom: 10 } },
-                    React.createElement(
-                        'h3',
-                        null,
-                        questionData.text
-                    ),
-                    questionData.options.map(function (option, index) {
-                        return React.createElement(
-                            'div',
-                            { key: index },
-                            React.createElement(
-                                'label',
-                                null,
-                                React.createElement('input', {
-                                    type: 'radio',
-                                    value: index,
-                                    checked: Number(questionData.selectedOption) === index,
-                                    onChange: function onChange() {} }),
-                                option
-                            )
-                        );
-                    }),
-                    questionData.correct ? React.createElement(
-                        'h6',
-                        { style: { color: "green" } },
-                        ' \u2705 Correct'
-                    ) : React.createElement(
-                        'h6',
-                        { style: { color: "red" } },
-                        ' \u274C Wrong.'
-                    )
-                );
-            })
-        );
-    }
-
-    return quizActive ? React.createElement(QuizSession, null) : quizComplete ? React.createElement(PostQuiz, null) : React.createElement(PreQuiz, null);
+    return quizActive ? React.createElement(QuizSession, null) : React.createElement(PreQuiz, null);
 }
 
 var domContainer = document.querySelector('#quiz');

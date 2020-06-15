@@ -26,7 +26,6 @@ async function apiCaller(api, body, successCode, dataReturner, ) {
     const res = await fetch(api, req_init)
     if (res.ok) {
       const data = await res.json()
-      console.log(data)
       if (data.statusCode != successCode) {
         throw new Error((data.error !== undefined) 
         ? `${data.statusCode}: ${data.message} - ${JSON.stringify(data.error.details).replace(/[\[\]\{\}"'\\]+/g, '').split(':').pop()}`

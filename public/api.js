@@ -1,5 +1,5 @@
-const base_url = "https://pms-quiz.herokuapp.com/api/"
-// const base_url = "http://localhost:3000/api/"
+// const base_url = "https://pms-quiz.herokuapp.com/api/"
+const base_url = "http://localhost:3000/api/"
 
 async function login() {
     try {
@@ -42,7 +42,6 @@ async function addElements(elements) {
     let data = await apiCaller(base_url + "admin/add-elements", {
         elements
     }, 200)
-    console.log(data)
     return data
 }
 
@@ -50,7 +49,6 @@ async function addElements(elements) {
 async function fetchElements() {
     let data = await apiCaller(base_url + "admin/fetch-elements", 
     {}, 200)
-    console.log(data)
     return data.elements
 }
 
@@ -58,7 +56,6 @@ async function fetchElements() {
 async function wipeElements() {
     let data = await apiCaller(base_url + "admin/wipe-elements", 
     {}, 200)
-    console.log(data)
     return (data.statusCode === 200)
 }
 
@@ -66,7 +63,6 @@ async function addQuestions(questions) {
     let data = await apiCaller(base_url + "admin/add-questions", {
         questions
     }, 200)
-    console.log(data)
     return data
 }
 
@@ -75,7 +71,6 @@ async function fetchQuestions() {
     let data = await apiCaller(base_url + "admin/fetch-questions", 
     {}, 200)
     if (data) {
-        console.log(data)
         return data.questions
     }
 }
@@ -84,7 +79,6 @@ async function fetchQuestions() {
 async function wipeQuestions() {
     let data = await apiCaller(base_url + "admin/wipe-questions", 
     {}, 200)
-    console.log(data)
     return (data.statusCode === 200)
 }
 
@@ -95,7 +89,6 @@ async function start(elementIds, count) {
         elementIds, 
         count
     }, 200)
-    console.log(data)
     if (data){
         return data.questions
     }
@@ -109,7 +102,6 @@ async function submit(name, email, questions) {
         email,
         questions
     }, 200)
-    console.log(data)
     if (data) {
         return data.token
     }
