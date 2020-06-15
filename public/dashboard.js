@@ -325,7 +325,7 @@ function QuestionsTable() {
             React.createElement(
                 "tbody",
                 null,
-                questionsData.map(function (questionsObj, index) {
+                questionsData !== undefined && questionsData.map(function (questionsObj, index) {
                     return React.createElement(
                         "tr",
                         { key: index },
@@ -421,6 +421,15 @@ function DashBoard() {
         tab = _React$useState6[0],
         setTab = _React$useState6[1];
 
+    var tabStyle = {
+        textDecoration: "none",
+        color: "#222222",
+        background: "white",
+        border: "none",
+        boxShadow: "",
+        fontWeight: "normal"
+    };
+
     return React.createElement(
         "div",
         null,
@@ -429,14 +438,14 @@ function DashBoard() {
             { className: "tab" },
             React.createElement(
                 "button",
-                { className: "tablinks", onClick: function onClick() {
+                { style: tabStyle, onClick: function onClick() {
                         return setTab('elements');
                     } },
                 "Elements"
             ),
             React.createElement(
                 "button",
-                { className: "tablinks", onClick: function onClick() {
+                { style: tabStyle, onClick: function onClick() {
                         return setTab('questions');
                     } },
                 "Questions"
