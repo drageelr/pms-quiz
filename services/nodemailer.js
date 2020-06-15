@@ -28,7 +28,7 @@ exports.sendResultEmail = (emailTarget, token) => {
         from: 'CMS <cmslums@gmail.com>',
         to: emailTarget,
         subject: 'PMS Quiz Result',
-        html: `<h1>PMS Quiz Result</h1><p>Open this link to view your result: ${link}?token=${token}</p>`
+        html: `<h1>PMS Quiz Result</h1><p>Open this link to view your result: ${link}result.html?token=${token}</p>`
     };
     
     sendEmail(mailOptions);
