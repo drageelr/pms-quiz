@@ -237,6 +237,11 @@ button:active {
     opacity: 0;
 }
 
+.error {
+    font-size: 9;
+    color: red;
+}
+
 
 /* ANIMATIONS */
 

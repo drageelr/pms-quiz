@@ -1,8 +1,13 @@
 // const base_url = "https://pms-quiz.herokuapp.com/api/"
 const base_url = "http://localhost:3000/api/"
 
+function showError(id, error) {
+    document.getElementById(id).innerText = error
+}
+
 async function login() {
     try {
+        showError("error-login", "") //clears
         let req_init = {
         method: 'POST',
         headers: {
@@ -19,11 +24,16 @@ async function login() {
         if (res.ok) {
             const data = await res.json()
 
+            
             if (data.statusCode != 200) {
+                if (data.statusCode == 401) {
+                    showError("error-login", "Invalid email or password.")
+                }
                 throw new Error((data.error !== undefined) 
                 ? `${data.statusCode}: ${data.message} - ${JSON.stringify(data.error.details).replace(/[\[\]\{\}"'\\]+/g, '').split(':').pop()}`
                 : `${data.statusCode}: ${data.message}`) 
             }
+            
             
             localStorage.token = data.token
             window.location.assign("/dashboard.html")
