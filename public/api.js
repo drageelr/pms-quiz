@@ -1,5 +1,5 @@
-// const base_url = "https://pms-quiz.herokuapp.com/api/"
-const base_url = "http://localhost:3000/api/"
+const base_url = "https://pms-quiz.herokuapp.com/api/"
+// const base_url = "http://localhost:3000/api/"
 
 function showError(id, error) {
     document.getElementById(id).innerText = error
